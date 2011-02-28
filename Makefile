@@ -3,14 +3,15 @@ CC = gcc
 # -Wall : show all warnings
 FLAGS = -g -Wall
 LIBS = # None yet...
+COMMON = common.c
 SERVER = server.o
 CLIENT = client.o
 
 all: $(SERVER) $(CLIENT)
 
-%.o: %.c
+%.o: %.c $(COMMON)
 	@# Call the compiler with source & output arguments
-	$(CC) $(LIBS) $(FLAGS) -o $@ $<
+	$(CC) $(LIBS) $(FLAGS) -o $@ $^
 	@# Make the output file executable
 	chmod 755 $@
 
