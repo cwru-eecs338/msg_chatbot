@@ -22,10 +22,6 @@ clean:
 
 CLEAN_MSG = "All resources closed/removed."
 UNCLEAN_MSG = "Please clean resources using 'ipcrm'"
-# Make and run server
-test-server: $(SERVER)
-	@echo
-	-@./$(SERVER)
-	@echo
+test-clean:
 	@echo "Checking for open resources..."
 	@ipcs | grep -q -w $(USER); if [ $$? = 1 ] ; then echo $(CLEAN_MSG); else ipcs && echo $(UNCLEAN_MSG); fi
