@@ -7,11 +7,14 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
+#include <time.h>
 
 #include "common.h"
+#include "responses.h"
 
 void main_loop(int);
 void interrupt_handler(int);
+void respond(char*, struct chat_msg*);
 
 int interrupted = 0;
 
@@ -44,6 +47,9 @@ int main() {
 void main_loop(int msgqid) {
     pid_t pid = getpid();
 
+    // Seed random number generator
+    srand(time(NULL));
+
     // Structures for holding messages
     struct chat_msg incoming, outgoing;
     outgoing.return_type = (long int) pid;
@@ -66,7 +72,7 @@ void main_loop(int msgqid) {
 
         // Construct response
         outgoing.message_type = incoming.return_type;
-        strcpy(outgoing.buffer, "Fine.");
+        respond(incoming.buffer, &outgoing);
 
         // Send message
         status = msgsnd(
@@ -83,6 +89,31 @@ void main_loop(int msgqid) {
     puts("Server shutting down...");
 }
 
+/*
+ * Respond to the message, and place it
+ * in the outgoing message structure.
+ * TODO: Pass the Turing Test
+ */
+void respond(char* msg, struct chat_msg* outgoing) {
+    const char **resp_pool;
+    int pool_size;
+    if(strchr(msg, '?') != NULL) {
+        resp_pool = RESP_TO_QUESTION;
+        pool_size = LENGTH(RESP_TO_QUESTION);
+    } else if(strchr(msg, '!') != NULL) {
+        resp_pool = RESP_TO_EXCL;
+        pool_size = LENGTH(RESP_TO_EXCL);
+    } else {
+        resp_pool = RESP_DEFAULT;
+        pool_size = LENGTH(RESP_DEFAULT);
+    }
+    const char *response = resp_pool[rand() % pool_size];
+    strcpy(outgoing->buffer, response);
+}
+
+/*
+ * Called to handle SIGINT
+ */
 void interrupt_handler(int sig) {
     interrupted = 1;
 }
