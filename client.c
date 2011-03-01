@@ -56,7 +56,13 @@ void main_loop(int msgqid, int server_pid) {
         // Prompt user for message
         printf("%s", PROMPT);
         fflush(stdout);
-        fgets(outgoing.buffer, MAX_MSG_LEN, stdin);
+        do {
+            fgets(outgoing.buffer, MAX_MSG_LEN, stdin);
+
+            // If it's bigger than MAX_MSG_LEN,
+            // keep reading it in until we hit
+            // the newline character
+        } while(strchr(outgoing.buffer, '\n') == NULL);
 
         // Check for exit command
         if(strcmp(outgoing.buffer, EXIT) == 0) {
