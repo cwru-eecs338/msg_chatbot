@@ -8,7 +8,7 @@
 
 #include "common.h"
 
-const char *EXIT = "exit";
+const char *EXIT = "exit\n";
 const char *PROMPT = "YOU: ";
 
 void main_loop(int, int);
@@ -85,8 +85,8 @@ void main_loop(int msgqid, int server_pid) {
         if(status < 0) { break; }
 
         // Print server's message
-        printf("SERVER: %s\n", incoming.buffer);
-    }
+        printf("\033[0;%dm", ANSI_GREEN);
+        printf("SERVER: %s\033[0m\n", incoming.buffer);
 
-    puts("Goodbye!");
+    }
 }

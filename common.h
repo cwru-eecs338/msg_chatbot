@@ -24,4 +24,18 @@ struct chat_msg {
  */
 int try(int, char*);
 
+/*
+ * For colorful output
+ */
+enum ANSI_COLOR {
+    ANSI_BLACK = 30,
+    ANSI_RED,
+    ANSI_GREEN,
+    ANSI_YELLOW,
+    ANSI_BLUE,
+    ANSI_MAGENTA,
+    ANSI_CYAN,
+    ANSI_WHITE
+};
+
 #endif

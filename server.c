@@ -43,8 +43,6 @@ int main() {
 
 void main_loop(int msgqid) {
     pid_t pid = getpid();
-    printf("Server started with:\n\tpid: %d\n\tqid: %d\n",
-        pid, msgqid);
 
     // Structures for holding messages
     struct chat_msg incoming, outgoing;
