@@ -51,8 +51,8 @@ void main_loop(int msgqid) {
     srand(time(NULL));
 
     // Structures for holding messages
-    struct chat_msg incoming, outgoing;
-    outgoing.return_type = (long int) pid;
+    struct msgbuf incoming, outgoing;
+    outgoing.data.return_type = (long int) pid;
 
     // Function return status
     int status;
@@ -71,8 +71,8 @@ void main_loop(int msgqid) {
         if(status < 0) { break; }
 
         // Construct response
-        outgoing.message_type = incoming.return_type;
-        respond(incoming.buffer, &outgoing);
+        outgoing.message_type = incoming.data.return_type;
+        respond(incoming.data.buffer, &(outgoing.data));
 
         // Send message
         status = msgsnd(

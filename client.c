@@ -44,9 +44,9 @@ void main_loop(int msgqid, int server_pid) {
     pid_t pid = getpid();
 
     // Structures for holding messages
-    struct chat_msg incoming, outgoing;
+    struct msgbuf incoming, outgoing;
     outgoing.message_type = (long int) server_pid;
-    outgoing.return_type = (long int) pid;
+    outgoing.data.return_type = (long int) pid;
 
     // Function return status
     int status;
@@ -57,15 +57,15 @@ void main_loop(int msgqid, int server_pid) {
         printf("%s", PROMPT);
         fflush(stdout);
         do {
-            fgets(outgoing.buffer, MAX_MSG_LEN, stdin);
+            fgets(outgoing.data.buffer, MAX_MSG_LEN, stdin);
 
             // If it's bigger than MAX_MSG_LEN,
             // keep reading it in until we hit
             // the newline character
-        } while(strchr(outgoing.buffer, '\n') == NULL);
+        } while(strchr(outgoing.data.buffer, '\n') == NULL);
 
         // Check for exit command
-        if(strcmp(outgoing.buffer, EXIT) == 0) {
+        if(strcmp(outgoing.data.buffer, EXIT) == 0) {
             break;
         }
 
@@ -92,7 +92,7 @@ void main_loop(int msgqid, int server_pid) {
 
         // Print server's message
         printf("\033[0;%dm", ANSI_GREEN);
-        printf("SERVER: %s\033[0m\n", incoming.buffer);
+        printf("SERVER: %s\033[0m\n", incoming.data.buffer);
 
     }
 }

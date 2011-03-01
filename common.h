@@ -2,13 +2,20 @@
 #define MSG_CHATBOT_COMMON
 
 /*
- * Message Structure
+ * Actual Message
  */
 #define MAX_MSG_LEN 140
 struct chat_msg {
-    long int message_type;
     long int return_type;
     char buffer[MAX_MSG_LEN];
+};
+
+/*
+ * Message Buffer
+ */
+struct msgbuf {
+    long int message_type;
+    struct chat_msg data;
 };
 
 /*
