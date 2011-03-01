@@ -11,6 +11,17 @@ struct chat_msg {
     char buffer[MAX_MSG_LEN];
 };
 
+/*
+ * Project ID for key
+ * generation with ftok()
+ */
+#define PROJ_ID 1
+
+/*
+ * Check return status;
+ * print message and abort
+ * if status < 0
+ */
 int try(int, char*);
 
 #endif

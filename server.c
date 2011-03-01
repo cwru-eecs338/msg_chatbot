@@ -19,10 +19,17 @@ int main() {
     // Setup signal handler
     assert(signal(SIGINT, interrupt_handler) != SIG_ERR);
 
-    // Create Queue
+    // Get key for message queue
+    key_t msgkey = try(
+        ftok("common.h", PROJ_ID),
+        "Could not get message queue key."
+    );
+
+    // Create Queue with key
     int msgqid = try(
-        msgget(IPC_PRIVATE, IPC_CREAT | 0600),
-        "Could not create message queue");
+        msgget(msgkey, IPC_CREAT | 0600),
+        "Could not create message queue"
+    );
 
     main_loop(msgqid);
 
@@ -39,14 +46,19 @@ void main_loop(int msgqid) {
     printf("Server started with:\n\tpid: %d\n\tqid: %d\n",
         pid, msgqid);
 
+    // Structures for holding messages
     struct chat_msg incoming, outgoing;
+    outgoing.return_type = (long int) pid;
+
+    // Function return status
     int status;
+
     while(!interrupted) {
 
         // Receive message
         status = msgrcv(
             msgqid,                  // Queue ID
-            (void *) &incoming,     // Place to store it
+            (void *) &incoming,      // Place to store it
             sizeof(struct chat_msg), // Maximum size
             (long int) pid,          // Message type (for us)
             0);                      // No flags
@@ -56,12 +68,11 @@ void main_loop(int msgqid) {
 
         // Construct response
         outgoing.message_type = incoming.return_type;
-        outgoing.return_type = (long int) pid;
         strcpy(outgoing.buffer, "Fine.");
 
         // Send message
         status = msgsnd(
-            msgqid,                 // Queue ID
+            msgqid,                  // Queue ID
             (void *) &outgoing,      // Message to send
             sizeof(struct chat_msg), // Message Size
             0);                      // No flags
