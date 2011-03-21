@@ -1,5 +1,5 @@
-Unix Message Queues
-===================
+Unix System V Message Queues
+============================
 
 Getting the files:
 ------------------
