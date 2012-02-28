@@ -73,7 +73,7 @@ void main_loop(int msgqid, int server_pid) {
         status = msgsnd(
             msgqid,                  // Queue ID
             (void *) &outgoing,      // Message to send
-            MAX_MSG_LEN,             // Message Size
+            sizeof(struct chat_msg), // Message Size
             0);                      // No flags
         // If we were interrupted or
         // or some error occurred
@@ -83,7 +83,7 @@ void main_loop(int msgqid, int server_pid) {
         status = msgrcv(
             msgqid,                  // Queue ID
             (void *) &incoming,      // Place to store it
-            MAX_MSG_LEN,             // Maximum size
+            sizeof(struct chat_msg), // Message Size
             (long int) pid,          // Message type (for us)
             0);                      // No flags
         // If we were interrupted or
